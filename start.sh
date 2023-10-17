@@ -91,7 +91,7 @@ generate_config() {
                 "network":"ws",
                 "security":"none",
                 "wsSettings":{
-                    "path":"/vless"
+                    "path":"/${WSPATH}"
                 }
             },
             "sniffing":{
@@ -119,7 +119,7 @@ generate_config() {
             "streamSettings":{
                 "network":"ws",
                 "wsSettings":{
-                    "path":"/vmess"
+                    "path":"/${WSPATH}"
                 }
             },
             "sniffing":{
@@ -147,7 +147,7 @@ generate_config() {
                 "network":"ws",
                 "security":"none",
                 "wsSettings":{
-                    "path":"/trojan"
+                    "path":"/${WSPATH}"
                 }
             },
             "sniffing":{
@@ -176,7 +176,7 @@ generate_config() {
             "streamSettings":{
                 "network":"ws",
                 "wsSettings":{
-                    "path":"/shadowsocks"
+                    "path":"/${WSPATH}"
                 }
             },
             "sniffing":{
