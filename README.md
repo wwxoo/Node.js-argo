@@ -1,7 +1,7 @@
 # 说明
 node环境上传index.js,start.sh和package.json即可，容器平台需要docker部署的才上传Dockerfile
 
-不需要自动访问可以注释掉index.js最后面的自动访问部分，需要用的话。需要在index.js第三行填写项目url
+不需要自动访问可以注释掉index.js中第160行之后的部分，需要用的话。需要在index.js第三行填写项目url
 
 第160行中的2为自动访问周期2分钟，根据个人需要修改
 
