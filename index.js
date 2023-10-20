@@ -46,7 +46,7 @@ app.get("/sub", (req, res) => {
     user.name === username &&
     user.pass === password
   ) {
-    fs.readFile("list.txt", "utf8", (err, data) => {
+    fs.readFile("sub.txt", "utf8", (err, data) => {
       if (err) {
         console.error(err);
         res.status(500).json({ error: "Error reading sub.txt" });
