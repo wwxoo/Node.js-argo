@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-NEZHA_SERVER=${NEZHA_SERVER:-'nz.f4i.cn'}
+NEZHA_SERVER=${NEZHA_SERVER:-'nz.nezha.com'}
 NEZHA_PORT=${NEZHA_PORT:-'5555'}
-NEZHA_KEY=${NEZHA_KEY:-'eOLJC0tJpf8Q4C21El'}
+NEZHA_KEY=${NEZHA_KEY:-'eOLJC0tJpf8abcdefg'}
 TLS=${TLS:-''}
 ARGO_DOMAIN=${ARGO_DOMAIN:-''}
 ARGO_AUTH=${ARGO_AUTH:-''}
-WSPATH=${WSPATH:-'xri'}
-UUID=${UUID:-'de04add9-5c68-8bab-870c-08cd5320df02'}
+UUID=${UUID:-'de04add9-5c68-8bab-870c-08cd5320df00'}
 CFIP=${CFIP:-'skk.moe'}
+NAME=${NAME:-'ABCD'} #节点名称，例如：glitch，replit
 
 # 生成xri配置文件
 generate_config() {
@@ -311,7 +311,7 @@ keep3="nohup ./server $args >/dev/null 2>&1 &"
 } 
 
 run
-sleep 15
+sleep 12
 
 
 function get_argo_domain() {
@@ -327,54 +327,24 @@ sleep 3
 
 generate_links() {
   argo=$(get_argo_domain)
-  sleep 1
+  sleep 2
 
-  VMESS="{ \"v\": \"2\", \"ps\": \"VMESS-${isp}\", \"add\": \"${CFIP}\", \"port\": \"443\", \"id\": \"${UUID}\", \"aid\": \"0\", \"scy\": \"none\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"${argo}\", \"path\": \"/vmess?ed=2048\", \"tls\": \"tls\", \"sni\": \"${argo}\", \"alpn\": \"\" }"
+  VMESS="{ \"v\": \"2\", \"ps\": \"${NAME}-${isp}\", \"add\": \"${CFIP}\", \"port\": \"443\", \"id\": \"${UUID}\", \"aid\": \"0\", \"scy\": \"none\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"${argo}\", \"path\": \"/vmess?ed=2048\", \"tls\": \"tls\", \"sni\": \"${argo}\", \"alpn\": \"\" }"
 
   cat > list.txt <<EOF
-*******************************************
-${CFIP} 可替换为CF优选IP,端口 443 可改为 2053 2083 2087 2096 8443
-----------------------------
-V2-rayN:
-----------------------------
-vless://${UUID}@${CFIP}:443?encryption=none&security=tls&sni=${argo}&type=ws&host=${argo}&path=%2Fvless?ed=2048#VLESS-${isp}
-----------------------------
+vless://${UUID}@${CFIP}:443?encryption=none&security=tls&sni=${argo}&type=ws&host=${argo}&path=%2Fvless?ed=2048#${NAME}-${isp}
 vmess://$(echo "$VMESS" | base64 -w0)
-----------------------------
-trojan://${UUID}@${CFIP}:443?security=tls&sni=${argo}&type=ws&host=${argo}&path=%2Ftrojan?ed=2048#Trojan-${isp}
-----------------------------
-ss://$(echo "chacha20-ietf-poly1305:${UUID}@${CFIP}:443" | base64 -w0)@${CFIP}:443#SSR-${isp}
-由于该软件导出的链接不全，请自行处理如下: 传输协议: WS ， 伪装域名: ${argo} ，路径: /shadowsocks?ed=2048 ， 传输层安全: tls ， sni: ${argo}
-*******************************************
-Shadowrocket:
-----------------------------
-vless://${UUID}@${CFIP}:443?encryption=none&security=tls&type=ws&host=${argo}&path=/vless?ed=2048&sni=${argo}#VLESS-${isp}
-----------------------------
-vmess://$(echo "none:${UUID}@${CFIP}:443" | base64 -w0)?remarks=${isp}-Vm&obfsParam=${argo}&path=/vmess?ed=2048&obfs=websocket&tls=1&peer=${argo}&alterId=0
-----------------------------
-trojan://${UUID}@${CFIP}:443?peer=${argo}&plugin=obfs-local;obfs=websocket;obfs-host=${argo};obfs-uri=/trojan?ed=2048#Trojan-${isp}
-----------------------------
-ss://$(echo "chacha20-ietf-poly1305:${UUID}@${CFIP}:443" | base64 -w0)?obfs=wss&obfsParam=${argo}&path=/shadowsocks?ed=2048#SSR-${isp}
-*******************************************
-Clash:
-----------------------------
-- {name: ${isp}-Vless, type: vless, server: ${CFIP}, port: 443, uuid: ${UUID}, tls: true, servername: ${argo}, skip-cert-verify: false, network: ws, ws-opts: {path: /vless?ed=2048, headers: { Host: ${argo}}}, udp: true}
-----------------------------
-- {name: ${isp}-Vmess, type: vmess, server: ${CFIP}, port: 443, uuid: ${UUID}, alterId: 0, cipher: none, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /vmess?ed=2048, headers: {Host: ${argo}}}, udp: true}
-----------------------------
-- {name: ${isp}-Trojan, type: trojan, server: ${CFIP}, port: 443, password: ${UUID}, udp: true, tls: true, sni: ${argo}, skip-cert-verify: false, network: ws, ws-opts: { path: /trojan?ed=2048, headers: { Host: ${argo} } } }
-----------------------------
-- {name: ${isp}-Shadowsocks, type: ss, server: ${CFIP}, port: 443, cipher: chacha20-ietf-poly1305, password: ${UUID}, plugin: v2ray-plugin, plugin-opts: { mode: websocket, host: ${argo}, path: /shadowsocks?ed=2048, tls: true, skip-cert-verify: false, mux: false } }
-*******************************************
+trojan://${UUID}@${CFIP}:443?security=tls&sni=${argo}&type=ws&host=${argo}&path=%2Ftrojan?ed=2048#${NAME}-${isp}
 EOF
-
   cat list.txt
-  echo -e "list.txt file is saveing successfully "
+base64 -w0 list.txt > sub.txt
+
+  echo -e "files are saved successfully"
 }
 generate_links
 
 cleanup_files() {
-  sleep 180  
+  sleep 120  
   rm -rf boot.log list.txt config.json
 }
 cleanup_files
@@ -442,3 +412,15 @@ while true; do
   done
   sleep 180
 done
+
+# 每10秒自动删除垃圾文件
+generate_autodel() {
+  cat > autodel.sh <<EOF
+while true; do
+  rm -rf /app/.git
+  sleep 10
+done
+EOF
+}
+generate_autodel
+[ -e delete.sh ] && bash autodel.sh
