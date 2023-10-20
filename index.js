@@ -68,8 +68,8 @@ app.use(
     pathRewrite: {
       "^/": "/",
     },
-    target: "http://127.0.0.1:8080/", // 需要跨域处理的请求地址
-    ws: true, // 是否代理websockets
+    target: "http://127.0.0.1:8080/",
+    ws: true,
   })
 );
 
